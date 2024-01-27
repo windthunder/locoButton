@@ -8,7 +8,8 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
   } else {
     // command === 'build'
     return {
-      base: '/locoButton/'
+      base: '/locoButton/',
+      publicDir: '/locoButton/mp3/',
     }
   }
 })

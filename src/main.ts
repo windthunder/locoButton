@@ -18,15 +18,26 @@ function getMp3Url(fileName: string) : string {
 }
 
 // perload all mp3
+let total_count = document.querySelectorAll('.sound').length
+let loaded_count = 0
+
 document.querySelectorAll('.sound').forEach((el) => {
-  const sound = (<AudioButtonElement>el).dataset.sound as string
-  (<AudioButtonElement>el).audio = new Audio(getMp3Url(sound))
+  let el2 = el as AudioButtonElement
+  const sound = el2.dataset.sound as string
+  const audio = new Audio(getMp3Url(sound))
+  audio.addEventListener('canplaythrough', () => {
+    loaded_count++
+    document.getElementById('loading').innerText = `Loading ${loaded_count}/${total_count}`
+  })
+  audio.preload = 'auto'
+  el2.audio = audio
 })
 
 // 當點擊.sound時 撥放 data-sound的音檔
 document.querySelectorAll('.sound').forEach((el) => {
-  (<AudioButtonElement>el).addEventListener('click', () => {
-    let audio = (<AudioButtonElement>el).audio
+  let el2 = el as AudioButtonElement
+  el2.addEventListener('click', () => {
+    let audio = el2.audio
     audio.volume = setting.volume
     audio.play()
   })

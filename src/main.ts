@@ -20,6 +20,7 @@ function getMp3Url(fileName: string) : string {
 // perload all mp3
 let total_count = document.querySelectorAll('.sound').length
 let loaded_count = 0
+const loading = document.getElementById('loading') as HTMLDivElement
 
 document.querySelectorAll('.sound').forEach((el) => {
   let el2 = el as AudioButtonElement
@@ -27,7 +28,7 @@ document.querySelectorAll('.sound').forEach((el) => {
   const audio = new Audio(getMp3Url(sound))
   audio.addEventListener('canplaythrough', () => {
     loaded_count++
-    document.getElementById('loading').innerText = `Loading ${loaded_count}/${total_count}`
+    loading.innerText = `Loading ${loaded_count}/${total_count}`
   })
   audio.preload = 'auto'
   el2.audio = audio

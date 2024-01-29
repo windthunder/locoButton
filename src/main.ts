@@ -20,15 +20,19 @@ function getMp3Url(fileName: string) : string {
 // perload all mp3
 let total_count = document.querySelectorAll('.sound').length
 let loaded_count = 0
-const loading = document.getElementById('loading') as HTMLDivElement
+const loading = document.getElementById('loading')
+let now_playing: HTMLAudioElement | null = null
 
 document.querySelectorAll('.sound').forEach((el) => {
   let el2 = el as AudioButtonElement
-  const sound = el2.dataset.sound as string
+  const sound = el2.dataset.sound
+  if(!sound) return
   const audio = new Audio(getMp3Url(sound))
   audio.addEventListener('canplaythrough', () => {
     loaded_count++
-    loading.innerText = `Loading ${loaded_count}/${total_count}`
+    if(loading instanceof HTMLElement) {
+      loading.innerText = `Loading ${loaded_count}/${total_count}`
+    }
   })
   audio.preload = 'auto'
   el2.audio = audio
@@ -39,7 +43,22 @@ document.querySelectorAll('.sound').forEach((el) => {
   let el2 = el as AudioButtonElement
   el2.addEventListener('click', () => {
     let audio = el2.audio
-    audio.volume = setting.volume
-    audio.play()
+    console.log(audio)
+    console.log(now_playing)
+    if(now_playing === audio) {
+      audio.pause()
+      audio.currentTime = 0
+      now_playing = null
+      return
+    } else {
+      if(now_playing) {
+        now_playing.pause()
+        now_playing.currentTime = 0
+      }
+      now_playing = audio
+      audio.volume = setting.volume
+      audio.play()
+    }
+
   })
 })
